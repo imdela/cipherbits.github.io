@@ -1,0 +1,7 @@
+# Dependencies (none currently, kept for future use).
+node_modules/
+
+# Local environment files — never committed.
+.env
+.env.local
+.env.*.local
