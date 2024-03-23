@@ -10,7 +10,7 @@ Live site: https://cipherbits.org
 Cipherbits generates passwords entirely in the browser using the native Web
 Crypto API (`crypto.getRandomValues`). No network call happens during
 generation, nothing is stored, and there is no account, no tracking, and no
-ads. It deploys for free on static hosting (Vercel Hobby).
+ads. It deploys for free on static hosting (GitHub Pages).
 
 Cipherbits is planned to grow into a small, free, transparent practical
 cryptography toolkit — strength checking, breach checking (HIBP),
@@ -25,7 +25,7 @@ client-side, verifiable widget. See [docs/ROADMAP.md](docs/ROADMAP.md).
 - **Built-in i18n** — English at `/`, French at `/fr/`, Spanish at `/es/`,
   for the whole site, including the mini blog
 - **pnpm** — package manager
-- **Vercel** — free static hosting
+- **GitHub Pages** — free static hosting
 
 ## Repository layout
 
@@ -57,8 +57,10 @@ pnpm check      # pre-commit gate: lint → typecheck → test → build
 
 ## Deployment
 
-`vercel.json` deploys the static `dist/` output on Vercel (free Hobby plan).
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#7-development-workflow).
+The static `dist/` output is served by **GitHub Pages** (free) through the
+Pages workflow (`.github/workflows/pages.yml`). See
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and
+[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
 
 ## Security
 
