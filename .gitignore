@@ -5,3 +5,6 @@ node_modules/
 .env
 .env.local
 .env.*.local
+
+# Astro build cache.
+.astro/
