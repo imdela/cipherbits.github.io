@@ -75,7 +75,7 @@ explicitly. Everything else stays 100% in the browser.
 | Language | Status |
 |---|---|
 | English | Live |
-| Français | Next |
+| Français | Live |
 | Español | Next |
 | 中文 | Next |
 | Português | Next |
@@ -85,9 +85,21 @@ explicitly. Everything else stays 100% in the browser.
 | 日本語 | Next |
 | العربية | Under study (RTL layout) |
 
-English is live. The others follow once native-speaker translations exist —
-the site's "transparent, no-bullshit" positioning is undermined by
-machine-translated UI.
+English and Français are live. The others follow once native-speaker
+translations exist — the site's "transparent, no-bullshit" positioning is
+undermined by machine-translated UI.
+
+---
+
+## Versioning
+
+| Version | Scope |
+|---|---|
+| **1.0** | The launch: generator + English/French bilingual + SEO. Locked. |
+| **1.1, 1.2, …** | Each new language and its SEO. Shipped as ordinary commits, no history rewrite. |
+| **2.0** | The toolkit: the first new tool beyond the generator. |
+
+The version lives in this roadmap, not in the deployment guide.
 
 ---
 
