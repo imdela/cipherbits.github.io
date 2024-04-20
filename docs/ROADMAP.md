@@ -16,6 +16,14 @@ verifiable behavior, and no data collection.
 
 ---
 
+## Live
+
+### Password generator
+The tool that started Cipherbits: random passwords generated 100% locally
+in your browser — no account, no data collection.
+
+---
+
 ## Planned tools — 100% in your browser
 
 All of these run entirely on your device, exactly like the generator.
@@ -54,19 +62,19 @@ A digits-only generator for unlock codes and the like.
 
 ## Under study
 
-### Educational content
-Interactive demos of historical ciphers (Caesar, Vigenère, XOR), short
-honest articles, and a plain-language glossary of cryptography terms.
+### Ephemeral secret sharing
+Encrypt a message client-side, then share a link that self-destructs after
+reading. This is the **only exception** to the "100% local" promise:
+delivery needs a small serverless piece, and it would be documented
+explicitly. Everything else stays 100% in the browser.
 
 ---
 
 ## V2 — planned
 
-### Ephemeral secret sharing
-Encrypt a message client-side, then share a link that self-destructs after
-reading. This is the **only planned exception** to the "100% local" promise:
-delivery needs a small serverless piece, and it would be documented
-explicitly. Everything else stays 100% in the browser.
+### Educational content
+Interactive demos of historical ciphers (Caesar, Vigenère, XOR), short
+honest articles, and a plain-language glossary of cryptography terms.
 
 ---
 
