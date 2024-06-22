@@ -15,7 +15,7 @@ ads. It deploys for free on static hosting (GitHub Pages).
 Cipherbits is planned to grow into a small, free, transparent practical
 cryptography toolkit — strength checking, breach checking (HIBP),
 passphrases, TOTP, text encryption, file checksums, and more — each tool a
-client-side, verifiable widget. See [docs/ROADMAP.md](docs/ROADMAP.md).
+client-side, verifiable widget. See [docs/roadmap.md](docs/roadmap.md).
 
 ## Stack
 
@@ -25,7 +25,8 @@ client-side, verifiable widget. See [docs/ROADMAP.md](docs/ROADMAP.md).
 - **Built-in i18n** — English at `/`, French at `/fr/`, Spanish at `/es/`,
   for the whole site, including the mini blog
 - **pnpm** — package manager
-- **GitHub Pages** — free static hosting
+- **GitHub Pages** — free static hosting (v1); **Vercel** — added for the V2
+  serverless feature
 
 ## Repository layout
 
@@ -33,8 +34,9 @@ client-side, verifiable widget. See [docs/ROADMAP.md](docs/ROADMAP.md).
 cipherbits/
 ├── README.md                # this file
 ├── docs/                    # documentation
-│   ├── ARCHITECTURE.md      # stack, i18n model, SEO strategy, roadmap mapping
-│   └── ROADMAP.md           # planned features beyond the generator
+│   ├── architecture.md      # stack, i18n model, SEO strategy, roadmap mapping
+│   └── roadmap.md           # planned features beyond the generator
+├── Taskfile.yml             # task runner (dev / build / test / check)
 ├── public/                  # favicon, robots.txt
 └── src/
     ├── i18n/                # translation dictionaries (en/fr/es)
@@ -57,10 +59,11 @@ pnpm check      # pre-commit gate: lint → typecheck → test → build
 
 ## Deployment
 
-The static `dist/` output is served by **GitHub Pages** (free) through the
-Pages workflow (`.github/workflows/pages.yml`). See
-[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and
-[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+The static `dist/` output is served by **GitHub Pages** (free, from the public
+`cipherbits.github.io` repository — a clone of the `dev` branch). **Vercel**
+(free Hobby plan) is added for the V2 ephemeral secret-sharing feature — the
+only serverless piece in the roadmap. See
+[docs/architecture.md](docs/architecture.md#7-development-workflow).
 
 ## Security
 

@@ -48,12 +48,12 @@ GIT_AUTHOR_DATE="<deployment date>" GIT_COMMITTER_DATE="<deployment date>" git c
 git push --force-with-lease deploy main:project
 ```
 
-Then rebuild the site branch from `project` with the mirror script, which
+Then rebuild the site branch from `project` with the release script, which
 copies every `dist/` change as its own dated commit chained on `main` —
 never an orphan overwrite:
 
 ```bash
-scripts/mirror-site.sh deploy
+scripts/release.sh deploy
 ```
 
 The script validates `project`'s history first (read-only, fails fast on a

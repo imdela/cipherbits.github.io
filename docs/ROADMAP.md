@@ -22,14 +22,14 @@ verifiable behavior, and no data collection.
 The tool that started Cipherbits: random passwords generated 100% locally
 in your browser — no account, no data collection.
 
-### Strength checker
-Checks an existing password's strength, not a fake coloured bar.
-
 ---
 
 ## Planned tools — 100% in your browser
 
 All of these run entirely on your device, exactly like the generator.
+
+### Strength checker
+Analyse an existing password's real entropy, not a fake coloured bar.
 
 ### Breach checker (Have I Been Pwned)
 Checks known breach databases using k-anonymity: the password is hashed

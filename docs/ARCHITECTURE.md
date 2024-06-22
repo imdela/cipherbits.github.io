@@ -1,79 +1,131 @@
 # Cipherbits — Architecture
 
-> Version: 1.0 | March 2024
-> Stack: Astro + TypeScript + Vitest + pnpm + GitHub Pages (static, free)
+> Version: 2.0 | August 2026
+> Stack: Astro + TypeScript + Vitest + pnpm + GitHub Pages (static, free); Vercel for the V2 serverless feature
 
-## 1. What it is
+---
 
-Cipherbits is a secure password generator. It runs 100% in the browser using
-the native Web Crypto API (`crypto.getRandomValues`). No network call happens
-during generation, nothing is stored, and there is no account, no tracking,
-and no ads. It is multilingual by design (English default, French, Spanish —
-see [docs/ROADMAP.md](docs/ROADMAP.md) for the rollout order) and deploys for
-free on GitHub Pages.
-
-## 2. Why Astro
+## 1. Why Astro
 
 - **Static by default** — output is plain HTML/CSS/JS. Zero JavaScript unless a
   tool needs it (Astro "islands").
 - **Built-in i18n routing** — locales `en`/`fr`/`es` with a prefix-free default
   locale. One source page, all languages; no hand-rolled per-language pages.
-- **Official SEO integrations** — sitemap.
-- **GitHub Pages** — free static hosting, serving the static `dist/` output
-  from the public `cipherbits.github.io` repository.
+- **First-class MDX content collections** for the mini blog.
+- **Official SEO integrations** — sitemap and RSS.
+- **GitHub Pages** — free static hosting for v1, serving the static `dist/`
+  output from the public `cipherbits.github.io` repository.
+- **Vercel Hobby** — added for the single V2 serverless feature (ephemeral
+  secret sharing), which plugs in via an API route without changing the stack.
 
-**Rejected alternative:** a hand-rolled vanilla build (`template.html` +
-`build.js` + `locales/*.json`). Fine for a single page, but it does not scale
-to a multi-tool site with a trilingual mini blog.
+**Rejected alternatives:**
 
-## 3. Repository structure
+- *Reusing blog.delaa's Next.js template* — proven and well defined, but
+  monolingual. Adding an i18n layer (routing middleware, `[locale]` segment,
+  per-language content) to a template with no locale concept costs more than
+  the bloat it saves stripping.
+- *Hand-rolled vanilla SSG (current `build.js`)* — fine for a single page,
+  but does not scale to a multi-tool site with a trilingual blog.
+
+---
+
+## 2. Multilingual model
+
+Two layers, both trilingual (`en` default at `/`, `fr` at `/fr/`, `es` at `/es/`):
+
+1. **UI strings** — translation dictionaries
+   (`src/i18n/ui.en.ts`, `ui.fr.ts`, `ui.es.ts`). One key, three values.
+2. **Content (articles)** — one MDX file per language, with a `lang` field and
+   `translations` links to the same article in the other languages.
+
+Everything trilingual — tools and blog alike.
+
+---
+
+## 3. Content model (mini blog)
 
 ```
-cipherbits/
-├── src/
-│   ├── i18n/                # translation dictionaries (en/fr/es)
-│   ├── layouts/             # shared HTML shell (Layout.astro)
-│   ├── lib/                 # pure, tested crypto core
-│   ├── pages/               # index, how-it-works, privacy, roadmap, security-tips
-│   ├── scripts/             # generator logic, chrome extension script
-│   └── styles/              # design tokens
-├── public/                  # favicon set, robots.txt, CNAME
-├── docs/                    # architecture, roadmap, deployment guide
-├── dist/                    # generated output — this is what gets deployed
-├── astro.config.mjs         # site URL, sitemap integration
-├── package.json             # pnpm
-└── Taskfile.yml             # task runner (dev / build / test / check)
+src/content/blog/
+├── en/why-password-entropy.md      →  /blog/why-password-entropy
+├── fr/pourquoi-entropie-mdp.md     →  /fr/blog/pourquoi-entropie-mdp
+└── es/por-que-entropia.md          →  /es/blog/por-que-entropia
 ```
 
-## 4. Why per-language static pages
+Article frontmatter:
 
-Each language gets its own indexable URL (`/`, `/fr/`, `/es/`) with its own
-`<title>`, `<meta description>` and `hreflang` tags — better indexed by search
-engines than a single URL with a client-side language switch. Text stays
-centralized in `src/i18n/`; the Astro build regenerates the pages.
+```yaml
+---
+title: "Why password entropy matters"
+lang: en
+date: 2026-08-06
+tags: ["entropy"]
+translations:
+  fr: "pourquoi-entropie-mdp"
+  es: "por-que-entropia"
+---
+```
 
-## 5. Crypto core
+Pages: `[locale]/blog/index.astro` (list, filtered by `lang`) and
+`[locale]/blog/[slug].astro` (article). The language switcher on each article
+is driven by the `translations` field.
+
+---
+
+## 4. Crypto core
 
 `src/lib/` — pure TypeScript, no DOM, unit-tested with Vitest:
 
 - `rng.ts` — rejection sampling (`crypto.getRandomValues`), no modulo bias
 - `charset.ts` — character sets, ambiguous-character exclusion
-- `entropy.ts` — entropy in bits, crack-time estimate
+- `entropy.ts` — entropy in bits, crack-time estimate, i18n plurals
+- *future:* `totp.ts` (RFC 6238), `cipher.ts` (AES-GCM), `diceware.ts`,
+  `checksum.ts`, HIBP breach checking
 
-The generator is an Astro island — vanilla JavaScript in the browser. The
-"100% local, zero backend" promise stays verifiable for every tool.
+Tools are Astro islands — vanilla JavaScript in the browser. The "100% local,
+zero backend" promise stays verifiable for every tool.
 
-## 6. SEO strategy
+---
+
+## 5. SEO strategy (site + blog)
 
 | Feature | Implementation |
 |---|---|
-| Sitemap | `@astrojs/sitemap` — all static routes |
+| Sitemap | `@astrojs/sitemap` — all static routes, articles included |
+| RSS | `@astrojs/rss` |
 | Metadata / Open Graph | shared layout reading frontmatter (`title`, `description`, `image`) |
+| Structured data | JSON-LD `Article` schema component in `<head>` |
 | Robots | `public/robots.txt` |
 | Canonical + `hreflang` | generated by the i18n routing — language alternates `en`/`fr`/`es` + `x-default` |
+| AI-agent reference | sitemap + JSON-LD + clean semantic structure; `llms.txt` once content exists |
 
-## 7. Deployment
+See `docs/roadmap.md` — SEO/AI-agent reference for the blog is non-negotiable.
 
-The static `dist/` output is served by **GitHub Pages** (free) through the
-Pages workflow (`.github/workflows/pages.yml`), behind the custom domain
-`cipherbits.org`. Step-by-step: see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+---
+
+## 6. Roadmap mapping
+
+Every roadmap item maps to an **additive** change — never a stack change:
+
+| Roadmap item | Where it lives |
+|---|---|
+| Password generator (current) | `components/PasswordGenerator.astro` + `lib/` |
+| Strength checker | `tools/strength.astro` + `lib/entropy.ts` |
+| Breach checker (HIBP, k-anonymity) | `tools/breach.astro` (client-side call) |
+| Passphrase / diceware | `tools/passphrase.astro` + `lib/diceware.ts` |
+| TOTP + QR | `tools/totp.astro` + `lib/totp.ts` |
+| Text encryption (AES-GCM) | `tools/cipher.astro` + `lib/cipher.ts` |
+| File checksum | `tools/checksum.astro` + `lib/checksum.ts` |
+| Technical secrets / PIN | `tools/secrets.astro` |
+| Mini blog (trilingual) | `content/blog/` + `[locale]/blog/…` |
+| Ephemeral secret sharing (V2) | `pages/api/…` serverless + key-value store — the only documented exception to "100% local" |
+
+---
+
+## 7. Development workflow
+
+- `pnpm install` / `pnpm dev` / `pnpm build` (static output to `dist/`)
+- `pnpm test` — Vitest unit tests on the crypto core
+- `pnpm check` — pre-commit gate: lint → typecheck → test → build
+- `Taskfile.yml` wraps the above (`task dev`, `task check`, …)
+- Conventional commits; all remote operations via `git-d`
+- No AI attribution in commits; all committed files in English
